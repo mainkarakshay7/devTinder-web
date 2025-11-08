@@ -39,6 +39,7 @@ const Requests = () => {
     fetchRequests();
   }, []);
 
+  
   return (
     <div className="flex flex-col justify-center text-center mt-10">
       <h1 className="font-bold text-3xl">Connection Requests</h1>
