@@ -17,9 +17,9 @@ const Chat = () => {
     //as soon as the page loaded, the socket connection is made and joinchat event is emitted
     socket.emit("joinChat", { firstName, userId, targetUserId });
 
-    socket.on("messageReceived", ({ firstName, text }) => {
-      console.log(firstName, text);
-      setMessages((messages) => [...messages, { firstName, text }]);
+    socket.on("messageReceived", ({ firstName, text, senderId }) => {
+      console.log(firstName, text, senderId);
+      setMessages((messages) => [...messages, { firstName, text, senderId }]);
     });
 
     return () => {
@@ -39,27 +39,48 @@ const Chat = () => {
   };
 
   return (
-    <div className="w-3/4 border border-gray-600 m-5 h-[70vh] flex flex-col">
+    <div className="w-3/4 border border-gray-600 m-5 h-[70vh] flex flex-col justify-center align-middle mx-auto">
       <h1 className="p-5 border-b border-gray-600">Chat window</h1>
       <div className="flex-1 overflow-scroll p-6">
         {/*Message container*/}
         {messages.map((msg, index) => (
-          <div className="chat chat-start" key={index}>
-            <div className="chat-image avatar">
-              <div className="w-10 rounded-full">
-                <img
-                  alt="Tailwind CSS chat bubble component"
-                  src="https://img.daisyui.com/images/profile/demo/kenobee@192.webp"
-                />
+          <>
+            {userId === msg.senderId ? (
+              <div className="chat chat-end">
+                <div className="chat-image avatar">
+                  <div className="w-10 rounded-full">
+                    <img
+                      alt="Tailwind CSS chat bubble component"
+                      src="https://img.daisyui.com/images/profile/demo/anakeen@192.webp"
+                    />
+                  </div>
+                </div>
+                <div className="chat-header">
+                  {msg.firstName}
+                  {/* <time className="text-xs opacity-50">12:46</time> */}
+                </div>
+                <div className="chat-bubble">{msg.text}</div>
+                {/* <div className="chat-footer opacity-50">Seen at 12:46</div> */}
               </div>
-            </div>
-            <div className="chat-header">
-              {msg.firstName}
-              <time className="text-xs opacity-50">12:45</time>
-            </div>
-            <div className="chat-bubble">{msg.text}</div>
-            <div className="chat-footer opacity-50">Delivered</div>
-          </div>
+            ) : (
+              <div className="chat chat-start" key={index}>
+                <div className="chat-image avatar">
+                  <div className="w-10 rounded-full">
+                    <img
+                      alt="Tailwind CSS chat bubble component"
+                      src="https://img.daisyui.com/images/profile/demo/kenobee@192.webp"
+                    />
+                  </div>
+                </div>
+                <div className="chat-header">
+                  {msg.firstName}
+                  {/* <time className="text-xs opacity-50">12:45</time> */}
+                </div>
+                <div className="chat-bubble">{msg.text}</div>
+                {/* <div className="chat-footer opacity-50">Delivered</div> */}
+              </div>
+            )}
+          </>
         ))}
       </div>
       <div className="p-5 border-b border-gray-600 flex items-center gap-2">
